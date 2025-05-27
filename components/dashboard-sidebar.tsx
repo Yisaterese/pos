@@ -148,7 +148,7 @@ export function DashboardSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/pos")} tooltip="Point of Sale">
-                  <Link href="/images/pos">
+                  <Link href="/pos">
                     <ShoppingCart className="h-4 w-4" />
                     <span>Point of Sale</span>
                   </Link>

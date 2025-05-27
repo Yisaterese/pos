@@ -33,7 +33,7 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <OfflineProvider>
               <SidebarProvider defaultOpen={true}>
-                <SwipeNavigation>
+                <SwipeNavigation>8
                   <div className="flex min-h-screen w-full">
                     <DashboardSidebar />
                     <main className="flex-1 w-full max-w-full overflow-x-hidden pb-16 md:pb-0">{children}</main>
