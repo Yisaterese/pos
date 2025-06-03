@@ -104,7 +104,7 @@ self.addEventListener("fetch", (event) => {
         .catch(() => {
           // If the request is for an image, return a placeholder
           if (event.request.destination === "image") {
-            return caches.match(placeholderimage)
+            return caches.match("")
           }
           return caches.match(OFFLINE_URL)
         })

@@ -1,5 +1,6 @@
 "use client"
 import Image from "next/image";
+import { StaticImageData } from "next/image";
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,20 +20,39 @@ import { saveOfflineTransaction } from "@/lib/offline-storage"
 import { useAppDispatch } from "@/lib/redux/hooks"
 import { addPendingTransaction } from "@/lib/redux/slices/offlineSlice"
 import { getCachedProducts } from "@/lib/offline-storage"
-import {initialProducts} from "@/utils/data/data";
-import placeholderimage from "@/public/images/placeholder.png";
+import { initialProducts } from "@/utils/data/data";
+
+// Define Product type based on initialProducts structure
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  stock: number;
+  status: string;
+  image: string | StaticImageData;
+};
+
+// Define CartItem type for cart items (no image, stock, or status properties)
+type CartItem = {
+  id: string;
+  name: string;
+  price: number;
+  qty: number;
+};
+
 export default function POSPage() {
-  const {toast} = useToast()
+  const { toast } = useToast()
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const {isOffline} = useOffline()
+  const { isOffline } = useOffline()
   const [activeCategory, setActiveCategory] = useState("all")
-  const [cartItems, setCartItems] = useState([
-    {id: 1, name: "Masala Chai Tea", price: 120, qty: 1},
-    {id: 2, name: "Basmati Rice (5kg)", price: 450, qty: 2},
-    {id: 3, name: "Handcrafted Leather Wallet", price: 899, qty: 1},
+  const [cartItems, setCartItems] = useState<CartItem[]>([
+    { id: "PRD001", name: "Wireless Headphones", price: 89.99, qty: 1 },
+    { id: "PRD002", name: "Organic Coffee Beans", price: 12.99, qty: 2 },
+    { id: "PRD003", name: "Leather Wallet", price: 34.5, qty: 1 },
   ])
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState<Product[]>(initialProducts)
 
   // Load products (from cache when offline, or initial products)
   useEffect(() => {
@@ -41,11 +61,11 @@ export default function POSPage() {
         // Load cached products when offline
         const cachedProducts = await getCachedProducts()
         if (cachedProducts && cachedProducts.length > 0) {
-          // Ensure cached products have category
-          const validatedProducts = cachedProducts.map((product) => ({
+          // Ensure cached products have category and normalize it
+          const validatedProducts = cachedProducts.map((product: Product) => ({
             ...product,
-            category: product.category || "uncategorized",
-            image: typeof product.image === "string" ? product.image : placeholderimage, // Handle cached image
+            category: (product.category || "uncategorized").toLowerCase(), // Normalize category
+            image: typeof product.image === "string" ? product.image : null,
           }))
           setProducts(validatedProducts)
         } else {
@@ -53,51 +73,13 @@ export default function POSPage() {
           setProducts(initialProducts)
         }
       } else {
-        // TODO: Uncomment and configure when API is available
-        /*
-        try {
-          const response = await fetch("/api/products")
-          if (!response.ok) {
-            throw new Error("Failed to fetch products")
-          }
-          const apiProducts = await response.json()
-          // Ensure API products have category and image
-          const validatedProducts = apiProducts.map((product) => ({
-            ...product,
-            category: product.category || "uncategorized",
-            image: product.image || "",
-          }))
-          setProducts(validProducts)
-          // Cache the fetched products
-          localStorage.setItem("cachedProducts", JSON.stringify(validatedProducts))
-        } catch (error) {
-          console.error("Error fetching products:", error)
-          // Fallback to cached products or initial products
-          const cachedProducts = await getCachedProducts()
-          if (cachedProducts && cachedProducts.length > 0) {
-            const validatedProducts = cachedProducts.map((product) => ({
-              ...product,
-              category: product.category || "uncategorized",
-              image: typeof product.image === "string" ? product.image : "",
-            }))
-            setProducts(validatedProducts)
-          } else {
-            setProducts(initialProducts)
-          }
-          toast({
-            title: "Error",
-            description: "Failed to load products. Using cached data.",
-            variant: "destructive",
-          })
-        }
-        */
         // For now, use initial products or cached products
         const cachedProducts = await getCachedProducts()
         if (cachedProducts && cachedProducts.length > 0) {
-          const validatedProducts = cachedProducts.map((product) => ({
+          const validatedProducts = cachedProducts.map((product: Product) => ({
             ...product,
-            category: product.category || "uncategorized",
-            image: typeof product.image === "string" ? product.image : placeholderimage,
+            category: (product.category || "uncategorized").toLowerCase(), // Normalize category
+            image: typeof product.image === "string" ? product.image : null,
           }))
           setProducts(validatedProducts)
         } else {
@@ -107,20 +89,20 @@ export default function POSPage() {
     }
 
     loadProducts()
-  }, [isOffline])
+  }, [isOffline, toast])
 
   const filteredProducts =
       activeCategory === "all"
           ? products
-          : products.filter((product) => product.category === activeCategory)
+          : products.filter((product: Product) => product.category === activeCategory)
 
-  const addToCart = (product: (typeof products)[0]) => {
+  const addToCart = (product: Product) => {
     setCartItems((prev) => {
       const existingItem = prev.find((item) => item.id === product.id)
       if (existingItem) {
-        return prev.map((item) => (item.id === product.id ? {...item, qty: item.qty + 1} : item))
+        return prev.map((item) => (item.id === product.id ? { ...item, qty: item.qty + 1 } : item))
       } else {
-        return [...prev, {...product, qty: 1}]
+        return [...prev, { id: product.id, name: product.name, price: product.price, qty: 1 }]
       }
     })
 
@@ -130,13 +112,13 @@ export default function POSPage() {
     })
   }
 
-  const updateQuantity = (id: number, change: number) => {
+  const updateQuantity = (id: string, change: number) => {
     setCartItems((prev) =>
-        prev.map((item) => (item.id === id ? {...item, qty: Math.max(1, item.qty + change)} : item)),
+        prev.map((item) => (item.id === id ? { ...item, qty: Math.max(1, item.qty + change) } : item)),
     )
   }
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id))
   }
 
@@ -255,9 +237,9 @@ export default function POSPage() {
                 </div>
                 <FilterButton
                     options={[
-                      {label: "In Stock", value: "in-stock"},
-                      {label: "On Sale", value: "on-sale"},
-                      {label: "New Arrivals", value: "new"},
+                      { label: "In Stock", value: "in-stock" },
+                      { label: "On Sale", value: "on-sale" },
+                      { label: "New Arrivals", value: "new" },
                     ]}
                 />
               </div>
@@ -280,33 +262,45 @@ export default function POSPage() {
                     <TabsTrigger value="accessories" className="flex-1">
                       Accessories
                     </TabsTrigger>
+                    <TabsTrigger value="sports" className="flex-1">
+                      Sports
+                    </TabsTrigger>
+                    <TabsTrigger value="home & kitchen" className="flex-1">
+                      Home & Kitchen
+                    </TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {filteredProducts.map((product) => (
-                    <Card key={product.id} className="overflow-hidden w-full">
-                      <CardContent className="p-4 flex flex-col items-center">
-                        <div className="w-full aspect-square bg-muted rounded-md mb-3 flex items-center justify-center">
-                          <Image
-                              src={typeof product.image === "string" ? product.image : product.image.src || ""}
-                              alt={product.name}
-                              width={96}
-                              height={96}
-                              className="h-24 w-24 object-contain"
-                          />
-                        </div>
-                        <div className="text-center w-full">
-                          <h3 className="font-medium text-sm truncate w-full">{product.name}</h3>
-                          <p className="text-primary font-bold">₹{product.price.toFixed(2)}</p>
-                          <Button className="w-full mt-2" size="sm" onClick={() => addToCart(product)}>
-                            Add to Cart
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                ))}
+                {filteredProducts.length === 0 ? (
+                    <p className="text-center col-span-full text-muted-foreground">
+                      No products found in this category.
+                    </p>
+                ) : (
+                    filteredProducts.map((product: Product) => (
+                        <Card key={product.id} className="overflow-hidden w-full">
+                          <CardContent className="p-4 flex flex-col items-center">
+                            <div className="w-full aspect-square bg-muted rounded-md mb-3 flex items-center justify-center">
+                              <Image
+                                  src={typeof product.image === "string" ? product.image : product.image.src || ""}
+                                  alt={product.name}
+                                  width={96}
+                                  height={96}
+                                  className="h-24 w-24 object-contain"
+                              />
+                            </div>
+                            <div className="text-center w-full">
+                              <h3 className="font-medium text-sm truncate w-full">{product.name}</h3>
+                              <p className="text-primary font-bold">₹{product.price.toFixed(2)}</p>
+                              <Button className="w-full mt-2" size="sm" onClick={() => addToCart(product)}>
+                                Add to Cart
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                    ))
+                )}
               </div>
             </div>
 
@@ -330,7 +324,7 @@ export default function POSPage() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {cartItems.map((item) => (
+                          {cartItems.map((item: CartItem) => (
                               <TableRow key={item.id}>
                                 <TableCell className="font-medium">{item.name}</TableCell>
                                 <TableCell className="text-right">
@@ -411,7 +405,4 @@ export default function POSPage() {
         <OfflineIndicator/>
       </PageTransition>
   );
-
-
-
-};
+}

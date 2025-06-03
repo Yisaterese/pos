@@ -34,69 +34,12 @@ import { OfflineIndicator } from "@/components/offline-indicator"
 import { getCachedProducts, cacheProductsForOffline, saveOfflineTransaction } from "@/lib/offline-storage"
 import { useAppDispatch } from "@/lib/redux/hooks"
 import { addPendingTransaction } from "@/lib/redux/slices/offlineSlice"
+import {initialProducts} from "@/utils/data/data";
 
 export default function ProductsPage() {
   const { isOffline } = useOffline()
   const dispatch = useAppDispatch()
-  // Sample product data
-  const [products, setProducts] = useState([
-    {
-      id: "PRD001",
-      name: "Wireless Headphones",
-      category: "Electronics",
-      price: 89.99,
-      stock: 45,
-      status: "In Stock",
-    },
-    {
-      id: "PRD002",
-      name: "Organic Coffee Beans",
-      category: "Food & Beverages",
-      price: 12.99,
-      stock: 120,
-      status: "In Stock",
-    },
-    {
-      id: "PRD003",
-      name: "Leather Wallet",
-      category: "Accessories",
-      price: 34.5,
-      stock: 18,
-      status: "Low Stock",
-    },
-    {
-      id: "PRD004",
-      name: "Smart Watch",
-      category: "Electronics",
-      price: 199.99,
-      stock: 0,
-      status: "Out of Stock",
-    },
-    {
-      id: "PRD005",
-      name: "Cotton T-Shirt",
-      category: "Clothing",
-      price: 19.99,
-      stock: 75,
-      status: "In Stock",
-    },
-    {
-      id: "PRD006",
-      name: "Yoga Mat",
-      category: "Sports",
-      price: 29.99,
-      stock: 8,
-      status: "Low Stock",
-    },
-    {
-      id: "PRD007",
-      name: "Stainless Steel Water Bottle",
-      category: "Home & Kitchen",
-      price: 24.99,
-      stock: 60,
-      status: "In Stock",
-    },
-  ])
+  const [products, setProducts] = useState([initialProducts])
 
   // Load cached products when offline
   useEffect(() => {
