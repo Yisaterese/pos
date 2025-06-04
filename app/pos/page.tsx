@@ -141,10 +141,10 @@ export default function POSPage() {
     }
 
     // Calculate totals
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-    const taxRate = 0.18 // GST rate in India
-    const tax = subtotal * taxRate
-    const total = subtotal + tax
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const taxRate = 0.08; // Typical US sales tax rate (8%)
+    const tax = subtotal * taxRate;
+    const total = subtotal + tax;
 
     // Create transaction object
     const transaction = {
@@ -198,7 +198,7 @@ export default function POSPage() {
 
   // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-  const taxRate = 0.18 // GST rate in India
+  const taxRate = 0.08 // GST rate in Dollars
   const tax = subtotal * taxRate
   const total = subtotal + tax
 
@@ -237,9 +237,9 @@ export default function POSPage() {
                 </div>
                 <FilterButton
                     options={[
-                      { label: "In Stock", value: "in-stock" },
-                      { label: "On Sale", value: "on-sale" },
-                      { label: "New Arrivals", value: "new" },
+                      {label: "In Stock", value: "in-stock"},
+                      {label: "On Sale", value: "on-sale"},
+                      {label: "New Arrivals", value: "new"},
                     ]}
                 />
               </div>
@@ -281,7 +281,8 @@ export default function POSPage() {
                     filteredProducts.map((product: Product) => (
                         <Card key={product.id} className="overflow-hidden w-full">
                           <CardContent className="p-4 flex flex-col items-center">
-                            <div className="w-full aspect-square bg-muted rounded-md mb-3 flex items-center justify-center">
+                            <div
+                                className="w-full aspect-square bg-muted rounded-md mb-3 flex items-center justify-center">
                               <Image
                                   src={typeof product.image === "string" ? product.image : product.image.src || ""}
                                   alt={product.name}
@@ -292,7 +293,7 @@ export default function POSPage() {
                             </div>
                             <div className="text-center w-full">
                               <h3 className="font-medium text-sm truncate w-full">{product.name}</h3>
-                              <p className="text-primary font-bold">₹{product.price.toFixed(2)}</p>
+                              <p className="text-primary font-bold">${product.price.toFixed(2)}</p>
                               <Button className="w-full mt-2" size="sm" onClick={() => addToCart(product)}>
                                 Add to Cart
                               </Button>
@@ -311,9 +312,9 @@ export default function POSPage() {
                   <CardTitle>Current Order</CardTitle>
                   <CardDescription>{cartItems.length} items in cart</CardDescription>
                 </CardHeader>
-                <CardContent className="p-0 flex flex-col h-[calc(100%-8rem)]">
-                  <div className="flex-1 overflow-auto">
-                    <div className="w-full overflow-auto">
+                <CardContent className="p-0 flex flex-col flex-1">
+                  <div className="flex-1 ">
+                    <div className="w-full ">
                       <Table>
                         <TableHeader>
                           <TableRow>
@@ -348,7 +349,7 @@ export default function POSPage() {
                                     </Button>
                                   </div>
                                 </TableCell>
-                                <TableCell className="text-right">₹{(item.price * item.qty).toFixed(2)}</TableCell>
+                                <TableCell className="text-right">${(item.price * item.qty).toFixed(2)}</TableCell>
                                 <TableCell>
                                   <Button
                                       variant="ghost"
@@ -366,27 +367,27 @@ export default function POSPage() {
                     </div>
                   </div>
 
-                  <div className="p-4 border-t mt-auto">
+                  <div className="p-4 border-t">
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
-                        <span>₹{subtotal.toFixed(2)}</span>
+                        <span>${subtotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>GST (18%)</span>
-                        <span>₹{tax.toFixed(2)}</span>
+                        <span>${tax.toFixed(2)}</span>
                       </div>
                       <Separator/>
                       <div className="flex justify-between font-bold text-lg">
                         <span>Total</span>
-                        <span>₹{total.toFixed(2)}</span>
+                        <span>${total.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <div className="p-4 border-t">
+              <div className="p-4 border-t sticky bottom-0 bg-background z-10">
                 <Button
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2 px-4 rounded-md shadow transition-colors"
                     onClick={handleCheckout}

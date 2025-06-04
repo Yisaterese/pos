@@ -1,10 +1,10 @@
 // Type definitions
 export interface OfflineTransaction {
-  id: string
-  type: "sale" | "return" | "inventory"
-  data: any
-  timestamp: number
-  synced: boolean
+  id: string;
+  type: "sale" | "return" | "inventory" | "product";
+  data: any; // Consider defining a more specific type for data
+  timestamp: number;
+  synced: boolean;
 }
 
 // Function to save a transaction for offline use

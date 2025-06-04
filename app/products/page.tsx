@@ -35,12 +35,19 @@ import { getCachedProducts, cacheProductsForOffline, saveOfflineTransaction } fr
 import { useAppDispatch } from "@/lib/redux/hooks"
 import { addPendingTransaction } from "@/lib/redux/slices/offlineSlice"
 import {initialProducts} from "@/utils/data/data";
-
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
+  status: string;
+  image: string;
+}
 export default function ProductsPage() {
   const { isOffline } = useOffline()
   const dispatch = useAppDispatch()
-  const [products, setProducts] = useState([initialProducts])
-
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   // Load cached products when offline
   useEffect(() => {
     const loadCachedProducts = async () => {
@@ -78,7 +85,7 @@ export default function ProductsPage() {
         if (isOffline) {
           // Save deletion for offline sync
           const offlineTransaction = await saveOfflineTransaction({
-            type: "product",
+                type: "product",
             data: { action: "delete", productId: productToDelete },
           })
 
@@ -185,7 +192,9 @@ export default function ProductsPage() {
                       <TableCell className="font-medium">{product.id}</TableCell>
                       <TableCell>{product.name}</TableCell>
                       <TableCell>{product.category}</TableCell>
-                      <TableCell className="text-right">${product.price.toFixed(2)}</TableCell>
+                      <TableCell className="text-right">
+                        ${typeof product.price === 'number' ? product.price.toFixed(2) : '0.00'}
+                      </TableCell>
                       <TableCell className="text-right">{product.stock}</TableCell>
                       <TableCell>
                         <Badge

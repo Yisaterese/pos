@@ -6,9 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-IN", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "INR",
+    currency: "USD", // Changed from INR to USD
     minimumFractionDigits: 2,
   }).format(amount)
 }
@@ -37,8 +37,8 @@ export function generateOrderId(): string {
   const prefix = "ETR"
   const timestamp = Date.now().toString().slice(-6)
   const random = Math.floor(Math.random() * 1000)
-    .toString()
-    .padStart(3, "0")
+      .toString()
+      .padStart(3, "0")
   return `${prefix}-${timestamp}-${random}`
 }
 
