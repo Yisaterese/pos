@@ -24,7 +24,7 @@ const initialState: CartState = {
   items: [],
   total: 0,
   tax: 0,
-  taxRate: 0.07, // 7% tax rate
+  taxRate: 0.08, // 7% tax rate
   discount: 0,
   customer: null,
 }

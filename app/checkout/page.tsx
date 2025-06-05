@@ -133,7 +133,7 @@ export default function CheckoutPage() {
     <div className="flex-1 p-4 md:p-8 pt-6">
       <div className="flex items-center mb-6">
         <Button variant="outline" size="icon" asChild className="mr-4">
-          <Link href="/images/pos">
+          <Link href="/pos">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
@@ -188,7 +188,7 @@ export default function CheckoutPage() {
                       className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-colors duration-200"
                     >
                       <div className="mb-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                        ₹
+                        $
                       </div>
                       <span className="text-center">Cash</span>
                     </Label>
@@ -310,7 +310,7 @@ export default function CheckoutPage() {
                       <span>
                         {item.name} x {item.quantity}
                       </span>
-                      <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                      <span>${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -318,23 +318,23 @@ export default function CheckoutPage() {
                 <div className="space-y-1">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>
-                    <span>₹{cart.total.toFixed(2)}</span>
+                    <span>${cart.total.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>GST ({(cart.taxRate * 100).toFixed(0)}%)</span>
-                    <span>₹{cart.tax.toFixed(2)}</span>
+                    <span>${cart.tax.toFixed(2)}</span>
                   </div>
                   {cart.discount > 0 && (
                     <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
                       <span>Discount</span>
-                      <span>-₹{cart.discount.toFixed(2)}</span>
+                      <span>-${cart.discount.toFixed(2)}</span>
                     </div>
                   )}
                 </div>
                 <Separator />
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
-                  <span>₹{(cart.total + cart.tax - cart.discount).toFixed(2)}</span>
+                  <span>${(cart.total + cart.tax - cart.discount).toFixed(2)}</span>
                 </div>
               </CardContent>
               <CardFooter>

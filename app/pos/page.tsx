@@ -21,6 +21,7 @@ import { useAppDispatch } from "@/lib/redux/hooks"
 import { addPendingTransaction } from "@/lib/redux/slices/offlineSlice"
 import { getCachedProducts } from "@/lib/offline-storage"
 import { initialProducts } from "@/utils/data/data";
+import Link from "next/link";
 
 // Define Product type based on initialProducts structure
 type Product = {
@@ -179,13 +180,13 @@ export default function POSPage() {
 
         toast({
           title: "Sale completed",
-          description: `Transaction of ₹${total.toFixed(2)} has been processed.`,
+          description: `Transaction of $${total.toFixed(2)} has been processed.`,
         })
       }
 
       // Clear cart and redirect
       setCartItems([])
-      router.push("/")
+      router.push("/checkout")
     } catch (error) {
       console.error("Error processing transaction:", error)
       toast({
@@ -212,10 +213,12 @@ export default function POSPage() {
               <Button variant="outline" onClick={clearCart}>
                 Clear Cart
               </Button>
+              <Link href={"/checkout"}>
               <Button onClick={handleCheckout}>
                 <ShoppingCart className="mr-2 h-4 w-4"/>
                 Checkout
               </Button>
+              </Link>
             </div>
           </div>
 
@@ -313,8 +316,8 @@ export default function POSPage() {
                   <CardDescription>{cartItems.length} items in cart</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0 flex flex-col flex-1">
-                  <div className="flex-1 ">
-                    <div className="w-full ">
+                  <div className="flex-1 overflow-auto ">
+                    <div className="w-full overflow-auto">
                       <Table>
                         <TableHeader>
                           <TableRow>
@@ -362,6 +365,7 @@ export default function POSPage() {
                                 </TableCell>
                               </TableRow>
                           ))}
+
                         </TableBody>
                       </Table>
                     </div>
