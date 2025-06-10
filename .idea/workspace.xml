@@ -5,10 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd058c0b-96c4-45b4-ac1e-e5186f744458" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/api/create-payment-intent/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/checkout/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/checkout/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/payments/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/payments/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/pos/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/pos/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/redux/provider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/lib/redux/provider.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/redux/slices/cartSlice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/redux/slices/cartSlice.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/redux/slices/productsSlice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/redux/slices/productsSlice.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/redux/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/redux/store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +60,7 @@
       <recent name="C:\Users\Semicolon Labs\Documents\afcftaHack\etiraj\public\pos" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Semicolon Labs\Documents\afcftaHack\etiraj\app\api\create-payment-intent" />
       <recent name="C:\Users\Semicolon Labs\Documents\afcftaHack\etiraj\public\images" />
       <recent name="C:\Users\Semicolon Labs\Documents\afcftaHack\etiraj\public\pos" />
     </key>
@@ -78,7 +89,8 @@
       <workItem from="1748349402511" duration="2055000" />
       <workItem from="1748381257696" duration="20453000" />
       <workItem from="1748898868200" duration="1923000" />
-      <workItem from="1748983430111" duration="23184000" />
+      <workItem from="1748983430111" duration="39644000" />
+      <workItem from="1749323153956" duration="27135000" />
     </task>
     <servers />
   </component>

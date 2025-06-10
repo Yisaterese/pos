@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 
 // Sample product data with Indian products
-const initialProducts = [
+export const initialProducts = [
   {
     id: "1",
     name: "Masala Chai Tea",

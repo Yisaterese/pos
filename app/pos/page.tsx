@@ -1,248 +1,232 @@
-"use client"
+"use client";
 import Image from "next/image";
-import { StaticImageData } from "next/image";
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Separator } from "@/components/ui/separator"
-import { MinusCircle, PlusCircle, ShoppingCart, Trash2, WifiOff } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useToast } from "@/components/ui/use-toast"
-import { FilterButton } from "@/components/filter-button"
-import { SearchBar } from "@/components/search-bar"
-import { MobileHeader } from "@/components/mobile-header"
-import { PageTransition } from "@/components/page-transition"
-import { useOffline } from "@/hooks/use-offline"
-import { OfflineIndicator } from "@/components/offline-indicator"
-import { saveOfflineTransaction } from "@/lib/offline-storage"
-import { useAppDispatch } from "@/lib/redux/hooks"
-import { addPendingTransaction } from "@/lib/redux/slices/offlineSlice"
-import { getCachedProducts } from "@/lib/offline-storage"
-import { initialProducts } from "@/utils/data/data";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { MinusCircle, PlusCircle, ShoppingCart, Trash2, WifiOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import { FilterButton } from "@/components/filter-button";
+import { SearchBar } from "@/components/search-bar";
+import { MobileHeader } from "@/components/mobile-header";
+import { PageTransition } from "@/components/page-transition";
+import { useOffline } from "@/hooks/use-offline";
+import { OfflineIndicator } from "@/components/offline-indicator";
+import { saveOfflineTransaction } from "@/lib/offline-storage";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { addPendingTransaction } from "@/lib/redux/slices/offlineSlice";
+import { getCachedProducts } from "@/lib/offline-storage";
+import { initialProducts } from "@/lib/redux/slices/productsSlice";
+import { addToCart, removeFromCart, updateQuantity, clearCart } from "@/lib/redux/slices/cartSlice";
 
-// Define Product type based on initialProducts structure
 type Product = {
   id: string;
   name: string;
-  price: number;
   category: string;
+  price: number;
   stock: number;
-  status: string;
-  image: string | StaticImageData;
+  sku: string;
+  barcode: string;
+  image: string;
+  description: string;
+  costPrice: number;
+  supplier: string;
+  reorderPoint: number;
+  lastUpdated: string;
 };
 
-// Define CartItem type for cart items (no image, stock, or status properties)
 type CartItem = {
   id: string;
   name: string;
   price: number;
-  qty: number;
+  quantity: number;
+  image: string;
 };
 
 export default function POSPage() {
-  const { toast } = useToast()
-  const router = useRouter()
-  const dispatch = useAppDispatch()
-  const { isOffline } = useOffline()
-  const [activeCategory, setActiveCategory] = useState("all")
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    { id: "PRD001", name: "Wireless Headphones", price: 89.99, qty: 1 },
-    { id: "PRD002", name: "Organic Coffee Beans", price: 12.99, qty: 2 },
-    { id: "PRD003", name: "Leather Wallet", price: 34.5, qty: 1 },
-  ])
-  const [products, setProducts] = useState<Product[]>(initialProducts)
+  const { toast } = useToast();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isOffline } = useOffline();
+  const cart = useAppSelector((state) => state.cart ?? {
+    items: [],
+    total: 0,
+    tax: 0,
+    taxRate: 0.08,
+    discount: 0,
+    customer: null,
+  });
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Load products (from cache when offline, or initial products)
+  useEffect(() => {
+    if (cart !== undefined) {
+      setIsHydrated(true);
+    }
+  }, [cart]);
+
   useEffect(() => {
     const loadProducts = async () => {
       if (isOffline) {
-        // Load cached products when offline
-        const cachedProducts = await getCachedProducts()
+        const cachedProducts = await getCachedProducts();
         if (cachedProducts && cachedProducts.length > 0) {
-          // Ensure cached products have category and normalize it
-          const validatedProducts = cachedProducts.map((product: Product) => ({
-            ...product,
-            category: (product.category || "uncategorized").toLowerCase(), // Normalize category
-            image: typeof product.image === "string" ? product.image : null,
-          }))
-          setProducts(validatedProducts)
+          setProducts(cachedProducts);
         } else {
-          // Fallback to initial products
-          setProducts(initialProducts)
+          setProducts(initialProducts);
         }
       } else {
-        // For now, use initial products or cached products
-        const cachedProducts = await getCachedProducts()
+        const cachedProducts = await getCachedProducts();
         if (cachedProducts && cachedProducts.length > 0) {
-          const validatedProducts = cachedProducts.map((product: Product) => ({
-            ...product,
-            category: (product.category || "uncategorized").toLowerCase(), // Normalize category
-            image: typeof product.image === "string" ? product.image : null,
-          }))
-          setProducts(validatedProducts)
+          setProducts(cachedProducts);
         } else {
-          setProducts(initialProducts)
+          setProducts(initialProducts);
         }
       }
-    }
+    };
+    loadProducts();
+  }, [isOffline]);
 
-    loadProducts()
-  }, [isOffline, toast])
+  if (!isHydrated) {
+    return <div>Loading cart...</div>;
+  }
 
   const filteredProducts =
       activeCategory === "all"
           ? products
-          : products.filter((product: Product) => product.category === activeCategory)
+          : products.filter((product) => product.category === activeCategory);
 
-  const addToCart = (product: Product) => {
-    setCartItems((prev) => {
-      const existingItem = prev.find((item) => item.id === product.id)
-      if (existingItem) {
-        return prev.map((item) => (item.id === product.id ? { ...item, qty: item.qty + 1 } : item))
-      } else {
-        return [...prev, { id: product.id, name: product.name, price: product.price, qty: 1 }]
-      }
-    })
+  const handleAddToCart = (product: Product) => {
+    dispatch(
+        addToCart({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: 1,
+          image: product.image || "",
+        })
+    );
 
     toast({
       title: "Added to cart",
       description: `${product.name} has been added to your cart.`,
-    })
-  }
+    });
+  };
 
-  const updateQuantity = (id: string, change: number) => {
-    setCartItems((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, qty: Math.max(1, item.qty + change) } : item)),
-    )
-  }
+  const handleUpdateQuantity = (id: string, change: number) => {
+    const item = cart.items.find((item) => item.id === id);
+    if (item) {
+      const newQuantity = Math.max(1, item.quantity + change);
+      dispatch(updateQuantity({ id, quantity: newQuantity }));
+    }
+  };
 
-  const removeFromCart = (id: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id))
-  }
+  const handleRemoveFromCart = (id: string) => {
+    dispatch(removeFromCart(id));
+  };
 
-  const clearCart = () => {
-    setCartItems([])
+  const handleClearCart = () => {
+    dispatch(clearCart());
     toast({
       title: "Cart cleared",
       description: "All items have been removed from your cart.",
-    })
-  }
+    });
+  };
 
   const handleCheckout = async () => {
-    if (cartItems.length === 0) {
+    if (cart.items.length === 0) {
       toast({
         title: "Cart is empty",
         description: "Please add items to your cart before proceeding to checkout.",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
-    // Calculate totals
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
-    const taxRate = 0.08; // Typical US sales tax rate (8%)
-    const tax = subtotal * taxRate;
+    const subtotal = cart.total;
+    const tax = cart.tax;
     const total = subtotal + tax;
 
-    // Create transaction object
     const transaction = {
-      items: cartItems,
+      items: cart.items,
       subtotal,
       tax,
       total,
       timestamp: new Date().toISOString(),
       status: isOffline ? "pending" : "completed",
-      customer: null, // Could be set if customer is selected
-    }
+      customer: cart.customer,
+    };
 
     try {
       if (isOffline) {
-        // Save transaction for offline use
         const offlineTransaction = await saveOfflineTransaction({
           type: "sale",
           data: transaction,
-        })
-
-        // Add to Redux store
-        dispatch(addPendingTransaction(offlineTransaction))
-
+        });
+        dispatch(addPendingTransaction(offlineTransaction));
         toast({
           title: "Sale completed offline",
           description: "This transaction will be synchronized when you're back online.",
-        })
+        });
       } else {
-        // In a real app, this would be an API call
-        // For now, we'll just simulate it
-        console.log("Processing online transaction:", transaction)
-
+        console.log("Processing online transaction:", transaction);
         toast({
           title: "Sale completed",
           description: `Transaction of $${total.toFixed(2)} has been processed.`,
-        })
+        });
       }
-
-      // Clear cart and redirect
-      setCartItems([])
-      router.push("/checkout")
+      // Delay clearCart until after payment is confirmed in CheckoutPage
+      router.push("/checkout");
     } catch (error) {
-      console.error("Error processing transaction:", error)
+      console.error("Error processing transaction:", error);
       toast({
         title: "Error",
         description: "There was an error processing your transaction. Please try again.",
         variant: "destructive",
-      })
+      });
     }
-  }
-
-  // Calculate totals
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-  const taxRate = 0.08 // GST rate in Dollars
-  const tax = subtotal * taxRate
-  const total = subtotal + tax
+  };
 
   return (
       <PageTransition>
-        <MobileHeader title="Point of Sale"/>
+        <MobileHeader title="Point of Sale" />
         <div className="flex flex-col h-screen w-full max-w-full">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border-b gap-4">
             <h2 className="text-2xl font-bold">Point of Sale</h2>
             <div className="flex items-center gap-4">
-              <Button variant="outline" onClick={clearCart}>
+              <Button variant="outline" onClick={handleClearCart}>
                 Clear Cart
               </Button>
-              <Link href={"/checkout"}>
               <Button onClick={handleCheckout}>
-                <ShoppingCart className="mr-2 h-4 w-4"/>
+                <ShoppingCart className="mr-2 h-4 w-4" />
                 Checkout
               </Button>
-              </Link>
             </div>
           </div>
 
           {isOffline && (
               <div className="bg-warning/20 p-2 text-center">
                 <div className="flex items-center justify-center gap-2 text-sm">
-                  <WifiOff className="h-4 w-4"/>
+                  <WifiOff className="h-4 w-4" />
                   <span>You're working offline. Your transactions will be synchronized when you're back online.</span>
                 </div>
               </div>
           )}
 
           <div className="flex flex-col lg:flex-row flex-1 overflow-hidden w-full">
-            {/* Product Selection Area */}
             <div className="w-full lg:w-2/3 p-4 overflow-auto">
               <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 gap-4">
                 <div className="w-full sm:w-auto flex-1">
-                  <SearchBar placeholder="Search products by name or scan barcode..." className="w-full"/>
+                  <SearchBar placeholder="Search products by name or scan barcode..." className="w-full" />
                 </div>
                 <FilterButton
                     options={[
-                      {label: "In Stock", value: "in-stock"},
-                      {label: "On Sale", value: "on-sale"},
-                      {label: "New Arrivals", value: "new"},
+                      { label: "In Stock", value: "in-stock" },
+                      { label: "On Sale", value: "on-sale" },
+                      { label: "New Arrivals", value: "new" },
                     ]}
                 />
               </div>
@@ -284,10 +268,9 @@ export default function POSPage() {
                     filteredProducts.map((product: Product) => (
                         <Card key={product.id} className="overflow-hidden w-full">
                           <CardContent className="p-4 flex flex-col items-center">
-                            <div
-                                className="w-full aspect-square bg-muted rounded-md mb-3 flex items-center justify-center">
+                            <div className="w-full aspect-square bg-muted rounded-md mb-3 flex items-center justify-center">
                               <Image
-                                  src={typeof product.image === "string" ? product.image : product.image.src || ""}
+                                  src={product.image}
                                   alt={product.name}
                                   width={96}
                                   height={96}
@@ -297,7 +280,7 @@ export default function POSPage() {
                             <div className="text-center w-full">
                               <h3 className="font-medium text-sm truncate w-full">{product.name}</h3>
                               <p className="text-primary font-bold">${product.price.toFixed(2)}</p>
-                              <Button className="w-full mt-2" size="sm" onClick={() => addToCart(product)}>
+                              <Button className="w-full mt-2" size="sm" onClick={() => handleAddToCart(product)}>
                                 Add to Cart
                               </Button>
                             </div>
@@ -308,15 +291,14 @@ export default function POSPage() {
               </div>
             </div>
 
-            {/* Cart Area */}
             <div className="w-full lg:w-1/3 border-t lg:border-t-0 lg:border-l flex flex-col">
               <Card className="flex-1 rounded-none border-0 shadow-none">
                 <CardHeader className="px-4 py-3 border-b">
                   <CardTitle>Current Order</CardTitle>
-                  <CardDescription>{cartItems.length} items in cart</CardDescription>
+                  <CardDescription>{cart.items.length} items in cart</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0 flex flex-col flex-1">
-                  <div className="flex-1 overflow-auto ">
+                  <div className="flex-1 overflow-auto">
                     <div className="w-full overflow-auto">
                       <Table>
                         <TableHeader>
@@ -328,7 +310,7 @@ export default function POSPage() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {cartItems.map((item: CartItem) => (
+                          {cart.items.map((item: CartItem) => (
                               <TableRow key={item.id}>
                                 <TableCell className="font-medium">{item.name}</TableCell>
                                 <TableCell className="text-right">
@@ -337,35 +319,34 @@ export default function POSPage() {
                                         variant="ghost"
                                         size="icon"
                                         className="h-6 w-6"
-                                        onClick={() => updateQuantity(item.id, -1)}
+                                        onClick={() => handleUpdateQuantity(item.id, -1)}
                                     >
-                                      <MinusCircle className="h-4 w-4"/>
+                                      <MinusCircle className="h-4 w-4" />
                                     </Button>
-                                    <span className="w-6 text-center">{item.qty}</span>
+                                    <span className="w-6 text-center">{item.quantity}</span>
                                     <Button
                                         variant="ghost"
                                         size="icon"
                                         className="h-6 w-6"
-                                        onClick={() => updateQuantity(item.id, 1)}
+                                        onClick={() => handleUpdateQuantity(item.id, 1)}
                                     >
-                                      <PlusCircle className="h-4 w-4"/>
+                                      <PlusCircle className="h-4 w-4" />
                                     </Button>
                                   </div>
                                 </TableCell>
-                                <TableCell className="text-right">${(item.price * item.qty).toFixed(2)}</TableCell>
+                                <TableCell className="text-right">${(item.price * item.quantity).toFixed(2)}</TableCell>
                                 <TableCell>
                                   <Button
                                       variant="ghost"
                                       size="icon"
                                       className="h-6 w-6"
-                                      onClick={() => removeFromCart(item.id)}
+                                      onClick={() => handleRemoveFromCart(item.id)}
                                   >
-                                    <Trash2 className="h-4 w-4"/>
+                                    <Trash2 className="h-4 w-4" />
                                   </Button>
                                 </TableCell>
                               </TableRow>
                           ))}
-
                         </TableBody>
                       </Table>
                     </div>
@@ -375,16 +356,16 @@ export default function POSPage() {
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
-                        <span>${subtotal.toFixed(2)}</span>
+                        <span>${cart.total.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>GST (18%)</span>
-                        <span>${tax.toFixed(2)}</span>
+                        <span>GST (8%)</span>
+                        <span>${cart.tax.toFixed(2)}</span>
                       </div>
-                      <Separator/>
+                      <Separator />
                       <div className="flex justify-between font-bold text-lg">
                         <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>${(cart.total + cart.tax).toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
@@ -407,7 +388,7 @@ export default function POSPage() {
             </div>
           </div>
         </div>
-        <OfflineIndicator/>
+        <OfflineIndicator />
       </PageTransition>
   );
 }
