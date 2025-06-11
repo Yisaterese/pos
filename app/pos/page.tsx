@@ -19,7 +19,7 @@ import { saveOfflineTransaction } from "@/lib/offline-storage";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { addPendingTransaction } from "@/lib/redux/slices/offlineSlice";
 import { getCachedProducts } from "@/lib/offline-storage";
-import { initialProducts } from "@/lib/redux/slices/productsSlice";
+import { initialProducts } from "@/utils/data/data";
 import { addToCart, removeFromCart, updateQuantity, clearCart } from "@/lib/redux/slices/cartSlice";
 
 type Product = {
@@ -75,6 +75,7 @@ export default function POSPage() {
         const cachedProducts = await getCachedProducts();
         if (cachedProducts && cachedProducts.length > 0) {
           setProducts(cachedProducts);
+
         } else {
           setProducts(initialProducts);
         }
@@ -266,17 +267,15 @@ export default function POSPage() {
                     </p>
                 ) : (
                     filteredProducts.map((product: Product) => (
-                        <Card key={product.id} className="overflow-hidden w-full">
-                          <CardContent className="p-4 flex flex-col items-center">
-                            <div className="w-full aspect-square bg-muted rounded-md mb-3 flex items-center justify-center">
+                        <Card key={product.id} className="overflow-hidden w-full ">
+                          <CardContent className="flex pt-4 flex-col items-center ">
                               <Image
                                   src={product.image}
                                   alt={product.name}
-                                  width={96}
-                                  height={96}
-                                  className="h-24 w-24 object-contain"
+                                  width={100}
+                                  height={100}
+                                  className="h-full w-full mb-3 object-contain rounded"
                               />
-                            </div>
                             <div className="text-center w-full">
                               <h3 className="font-medium text-sm truncate w-full">{product.name}</h3>
                               <p className="text-primary font-bold">${product.price.toFixed(2)}</p>
