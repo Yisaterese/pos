@@ -267,17 +267,15 @@ export default function POSPage() {
                     </p>
                 ) : (
                     filteredProducts.map((product: Product) => (
-                        <Card key={product.id} className="overflow-hidden w-full min-h-[300px]">
-                          <CardContent className="flex pt-4 flex-col items-center">
-                            <div className="w-full bg-white h-48 bg-muted rounded-md mb-3 flex items-center justify-center">
+                        <Card key={product.id} className="overflow-hidden w-full ">
+                          <CardContent className="flex pt-4 flex-col items-center ">
                               <Image
                                   src={product.image}
                                   alt={product.name}
-                                  width={192}
-                                  height={192}
-                                  className="object-cover rounded"
+                                  width={100}
+                                  height={100}
+                                  className="h-full w-full mb-3 object-contain rounded"
                               />
-                            </div>
                             <div className="text-center w-full">
                               <h3 className="font-medium text-sm truncate w-full">{product.name}</h3>
                               <p className="text-primary font-bold">${product.price.toFixed(2)}</p>
@@ -286,7 +284,8 @@ export default function POSPage() {
                               </Button>
                             </div>
                           </CardContent>
-                        </Card>                    ))
+                        </Card>
+                    ))
                 )}
               </div>
             </div>
