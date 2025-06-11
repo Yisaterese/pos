@@ -1,21 +1,7 @@
 export const initialProducts = [
+
     {
         id: "1",
-        name: "Masala Chai Tea",
-        category: "Food",
-        price: 120,
-        stock: 45,
-        sku: "MCT-001",
-        barcode: "890123456789",
-        image: "/images/pos/masalaTea.jpg",
-        description: "Premium blend of Indian spices and Assam tea leaves",
-        costPrice: 60,
-        supplier: "Himalayan Tea Exports",
-        reorderPoint: 10,
-        lastUpdated: "2023-05-01",
-    },
-    {
-        id: "2",
         name: "Smart Fitness Band",
         category: "Electronics",
         price: 2499,
@@ -30,7 +16,7 @@ export const initialProducts = [
         lastUpdated: "2023-05-02",
     },
     {
-        id: "3",
+        id: "2",
         name: "Bluetooth Speaker",
         category: "Electronics",
         price: 1299,
@@ -45,22 +31,7 @@ export const initialProducts = [
         lastUpdated: "2023-05-03",
     },
     {
-        id: "4",
-        name: "Handcrafted Leather Wallet",
-        category: "Accessories",
-        price: 899,
-        stock: 65,
-        sku: "HLW-004",
-        barcode: "890123456792",
-        image: "/images/products/leatherWallet.jpg",
-        description: "Genuine leather wallet handcrafted by artisans from Rajasthan",
-        costPrice: 450,
-        supplier: "Rajasthan Handicrafts",
-        reorderPoint: 15,
-        lastUpdated: "2023-05-04",
-    },
-    {
-        id: "5",
+        id: "3",
         name: "Cotton Kurta",
         category: "Clothing",
         price: 799,
@@ -75,7 +46,7 @@ export const initialProducts = [
         lastUpdated: "2023-05-05",
     },
     {
-        id: "6",
+        id: "4",
         name: "Basmati Rice (5kg)",
         category: "Food",
         price: 450,
@@ -90,7 +61,7 @@ export const initialProducts = [
         lastUpdated: "2023-05-06",
     },
     {
-        id: "7",
+        id: "5",
         name: "Copper Water Bottle",
         category: "Accessories",
         price: 349,
@@ -105,7 +76,7 @@ export const initialProducts = [
         lastUpdated: "2023-05-07",
     },
     {
-        id: "8",
+        id: "6",
         name: "Yoga Mat",
         category: "Sports",
         price: 599,
@@ -119,7 +90,38 @@ export const initialProducts = [
         reorderPoint: 8,
         lastUpdated: "2023-05-08",
     },
+    {
+        id: "7",
+        name: "Masala Chai Tea",
+        category: "Food",
+        price: 120,
+        stock: 45,
+        sku: "MCT-001",
+        barcode: "890123456789",
+        image: "/images/pos/masalaTea.jpg",
+        description: "Premium blend of Indian spices and Assam tea leaves",
+        costPrice: 60,
+        supplier: "Himalayan Tea Exports",
+        reorderPoint: 10,
+        lastUpdated: "2023-05-01",
+    },
+    {
+        id: "8",
+        name: "Handcrafted Leather Wallet",
+        category: "Accessories",
+        price: 899,
+        stock: 65,
+        sku: "HLW-004",
+        barcode: "890123456792",
+        image: "/images/products/leatherWallet.jpg",
+        description: "Genuine leather wallet handcrafted by artisans from Rajasthan",
+        costPrice: 450,
+        supplier: "Rajasthan Handicrafts",
+        reorderPoint: 15,
+        lastUpdated: "2023-05-04",
+    },
 ]
+
 //
 // export const initialProducts = [
 //     {
