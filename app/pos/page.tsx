@@ -269,7 +269,7 @@ export default function POSPage() {
                     filteredProducts.map((product: Product) => (
                         <Card key={product.id} className="overflow-hidden w-full min-h-[300px]">
                           <CardContent className="flex pt-4 flex-col items-center">
-                            <div className="w-full h-48 bg-muted rounded-md mb-3 flex items-center justify-center">
+                            <div className="w-full bg-white h-48 bg-muted rounded-md mb-3 flex items-center justify-center">
                               <Image
                                   src={product.image}
                                   alt={product.name}
