@@ -1,5 +1,4 @@
 export const initialProducts = [
-
     {
         id: "1",
         name: "Smart Fitness Band",
@@ -14,6 +13,14 @@ export const initialProducts = [
         supplier: "TechIndia Solutions",
         reorderPoint: 5,
         lastUpdated: "2023-05-02",
+        additionalImage: "/images/pos/smartFitnessBand_alt.jpg", // Placeholder
+        taxRate: 7.5, // Default tax rate
+        discount: 0, // No discount
+        weight: 0.15, // Estimated weight in kg
+        length: 25.0, // Estimated length in cm
+        width: 4.0, // Estimated width in cm
+        height: 1.5, // Estimated height in cm
+        notes: "Track steps and heart rate effectively.", // Placeholder note
     },
     {
         id: "2",
@@ -29,6 +36,14 @@ export const initialProducts = [
         supplier: "SoundWave Electronics",
         reorderPoint: 8,
         lastUpdated: "2023-05-03",
+        additionalImage: "/images/pos/bluetoothSpeaker_alt.jpg", // Placeholder
+        taxRate: 7.5, // Default tax rate
+        discount: 5, // Small discount
+        weight: 0.5, // Estimated weight in kg
+        length: 15.0, // Estimated length in cm
+        width: 5.0, // Estimated width in cm
+        height: 5.0, // Estimated height in cm
+        notes: "Great for outdoor use with durable design.", // Placeholder note
     },
     {
         id: "3",
@@ -44,6 +59,14 @@ export const initialProducts = [
         supplier: "Fabindia Wholesale",
         reorderPoint: 20,
         lastUpdated: "2023-05-05",
+        additionalImage: "/images/pos/cottonKurta_alt.jpg", // Placeholder
+        taxRate: 7.5, // Default tax rate
+        discount: 10, // Discount for clothing
+        weight: 0.3, // Estimated weight in kg
+        length: 70.0, // Estimated length in cm
+        width: 50.0, // Estimated width in cm
+        height: 1.0, // Estimated height in cm
+        notes: "Hand wash recommended for longevity.", // Placeholder note
     },
     {
         id: "4",
@@ -59,6 +82,14 @@ export const initialProducts = [
         supplier: "Punjab Agro Foods",
         reorderPoint: 15,
         lastUpdated: "2023-05-06",
+        additionalImage: "/images/pos/basmaticRice_alt.jpg", // Placeholder
+        taxRate: 0, // No tax on food (varies by region)
+        discount: 0, // No discount
+        weight: 5.0, // Actual weight in kg
+        length: 30.0, // Estimated length in cm
+        width: 20.0, // Estimated width in cm
+        height: 10.0, // Estimated height in cm
+        notes: "Store in a cool, dry place.", // Placeholder note
     },
     {
         id: "5",
@@ -74,6 +105,14 @@ export const initialProducts = [
         supplier: "Ari Products",
         reorderPoint: 10,
         lastUpdated: "2023-05-07",
+        additionalImage: "/images/pos/copperWaterBottle_alt.jpg", // Placeholder
+        taxRate: 7.5, // Default tax rate
+        discount: 0, // No discount
+        weight: 0.4, // Estimated weight in kg
+        length: 25.0, // Estimated length in cm
+        width: 7.0, // Estimated width in cm
+        height: 7.0, // Estimated height in cm
+        notes: "Clean regularly to maintain copper shine.", // Placeholder note
     },
     {
         id: "6",
@@ -89,6 +128,14 @@ export const initialProducts = [
         supplier: "Fitness Nigeria",
         reorderPoint: 8,
         lastUpdated: "2023-05-08",
+        additionalImage: "/images/pos/yogaMat_alt.jpg", // Placeholder
+        taxRate: 7.5, // Default tax rate
+        discount: 5, // Small discount
+        weight: 0.8, // Estimated weight in kg
+        length: 180.0, // Estimated length in cm
+        width: 60.0, // Estimated width in cm
+        height: 0.5, // Estimated height in cm
+        notes: "Ideal for all levels of yoga practice.", // Placeholder note
     },
     {
         id: "7",
@@ -104,6 +151,14 @@ export const initialProducts = [
         supplier: "Himalayan Tea Exports",
         reorderPoint: 10,
         lastUpdated: "2023-05-01",
+        additionalImage: "/images/pos/masalaTea_alt.jpg", // Placeholder
+        taxRate: 0, // No tax on food (varies by region)
+        discount: 0, // No discount
+        weight: 0.25, // Estimated weight in kg
+        length: 15.0, // Estimated length in cm
+        width: 10.0, // Estimated width in cm
+        height: 5.0, // Estimated height in cm
+        notes: "Brew with milk for authentic taste.", // Placeholder note
     },
     {
         id: "8",
@@ -119,72 +174,13 @@ export const initialProducts = [
         supplier: "Rajasthan Handicrafts",
         reorderPoint: 15,
         lastUpdated: "2023-05-04",
+        additionalImage: "/images/pos/leatherWallet_alt.jpg", // Placeholder
+        taxRate: 7.5, // Default tax rate
+        discount: 10, // Discount for accessories
+        weight: 0.2, // Estimated weight in kg
+        length: 12.0, // Estimated length in cm
+        width: 9.0, // Estimated width in cm
+        height: 1.0, // Estimated height in cm
+        notes: "Limited edition design.", // Placeholder note
     },
-]
-
-//
-// export const initialProducts = [
-//     {
-//         id: "PRD001",
-//         name: "Wireless Headphones",
-//         category: "electronics",
-//         price: 89.99,
-//         stock: 45,
-//         status: "In Stock",
-//         image: "/images/products/wirelessHeadphone.jpg",
-//     },
-//     {
-//         id: "PRD002",
-//         name: "Organic Coffee Beans",
-//         category: "food",
-//         price: 12.99,
-//         stock: 120,
-//         status: "In Stock",
-//         image: "/images/products/organicCoffeeBeans.jpg",
-//     },
-//     {
-//         id: "PRD003",
-//         name: "Leather Wallet",
-//         category: "accessories",
-//         price: 34.5,
-//         stock: 18,
-//         status: "Low Stock",
-//         image: "/images/products/leatherWallet.jpg",
-//     },
-//     {
-//         id: "PRD004",
-//         name: "Smart Watch",
-//         category: "electronics",
-//         price: 199.99,
-//         stock: 0,
-//         status: "Out of Stock",
-//         image: "/images/products/smartWatch.jpg",
-//     },
-//     {
-//         id: "PRD005",
-//         name: "Cotton T-Shirt",
-//         category: "clothing",
-//         price: 19.99,
-//         stock: 75,
-//         status: "In Stock",
-//         image: "/images/products/cottonTshirt.jpg",
-//     },
-//     {
-//         id: "PRD006",
-//         name: "Yoga Mat",
-//         category: "sports",
-//         price: 29.99,
-//         stock: 8,
-//         status: "Low Stock",
-//         image: "/images/products/yogaMat.jpg",
-//     },
-//     {
-//         id: "PRD007",
-//         name: "Stainless Steel Water Bottle",
-//         category: "home & kitchen",
-//         price: 24.99,
-//         stock: 60,
-//         status: "In Stock",
-//         image: "/images/products/waterbottle.jpg",
-//     },
-// ]
+];

@@ -21,22 +21,9 @@ import { addPendingTransaction } from "@/lib/redux/slices/offlineSlice";
 import { getCachedProducts } from "@/lib/offline-storage";
 import { initialProducts } from "@/utils/data/data";
 import { addToCart, removeFromCart, updateQuantity, clearCart } from "@/lib/redux/slices/cartSlice";
+import {Product} from "@/types/types";
 
-type Product = {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  sku: string;
-  barcode: string;
-  image: string;
-  description: string;
-  costPrice: number;
-  supplier: string;
-  reorderPoint: number;
-  lastUpdated: string;
-};
+
 
 type CartItem = {
   id: string;
