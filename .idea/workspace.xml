@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd058c0b-96c4-45b4-ac1e-e5186f744458" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/api/send-receipt/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/receipt/generateReceipt.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/receipt/printReceipt.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/receipt/sendReceipt.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/create-payment-intent/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/create-payment-intent/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/checkout/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/checkout/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +78,7 @@
       <workItem from="1748898868200" duration="1923000" />
       <workItem from="1748983430111" duration="39644000" />
       <workItem from="1749323153956" duration="27135000" />
-      <workItem from="1750058435933" duration="20538000" />
+      <workItem from="1750058435933" duration="23005000" />
     </task>
     <servers />
   </component>
