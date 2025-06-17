@@ -18,6 +18,9 @@ import { updateStock } from "@/lib/redux/slices/productsSlice";
 import { addSale } from "@/lib/redux/slices/salesSlice";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { printReceipt } from "@/components/receipt/printReceipt";
+import {sendEmailReceipt} from "@/components/receipt/sendReceipt";
+import {generateReceiptHTML} from "@/components/receipt/generateReceipt";
 
 // Initialize Stripe with your publishable key
 if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
@@ -99,7 +102,6 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
                     throw new Error("Stripe has not loaded or payment intent is not initialized.");
                 }
 
-                // Submit the PaymentElement to collect and validate card details
                 const { error: submitError } = await elements.submit();
                 if (submitError) {
                     throw new Error(submitError.message || "Failed to submit payment details.");
@@ -109,7 +111,7 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
                     elements,
                     clientSecret,
                     confirmParams: {
-                        return_url: `${window.location.origin}/pos`, // Redirect to POS after payment
+                        return_url: `${window.location.origin}/pos`,
                     },
                     redirect: "if_required",
                 });
@@ -124,9 +126,7 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
             }
 
             if (cart.customer) {
-                const purchaseId = `P${Math.floor(Math.random() * 10000)
-                    .toString()
-                    .padStart(4, "0")}`;
+                const purchaseId = `P${Math.floor(Math.random() * 10000).toString().padStart(4, "0")}`;
                 const today = new Date().toISOString().split("T")[0];
 
                 dispatch(
@@ -142,7 +142,11 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
                         })),
                         total: cart.total + cart.tax - cart.discount,
                         paymentMethod:
-                            paymentMethod === "card" ? "Credit Card" : paymentMethod === "cash" ? "Cash" : "UPI/Mobile Payment",
+                            paymentMethod === "card"
+                                ? "Credit Card"
+                                : paymentMethod === "cash"
+                                    ? "Cash"
+                                    : "UPI/Mobile Payment",
                     }),
                 );
 
@@ -164,10 +168,30 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
                 );
             }
 
+            // Handle receipt options
+            if (receiptOptions.email) {
+                const emailSent = await sendEmailReceipt(customerInfo, cart, paymentMethod, toast);
+                if (!emailSent) {
+                    console.warn("Email receipt failed to send");
+                }
+            }
+
+            if (receiptOptions.print) {
+                printReceipt(() => generateReceiptHTML(cart, customerInfo, paymentMethod), toast);
+            }
+
+            if (receiptOptions.sms && customerInfo.phone) {
+                toast({
+                    title: "SMS Receipt",
+                    description: "SMS receipt sending is not yet implemented.",
+                    variant: "default",
+                });
+            }
+
             setIsProcessing(false);
             setIsComplete(true);
 
-            dispatch(clearCart()); // Clear cart after successful payment
+            dispatch(clearCart());
             toast({
                 title: "Payment Successful",
                 description: "Your order has been processed successfully.",
@@ -181,7 +205,7 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
             setIsProcessing(false);
             toast({
                 title: "Payment Failed",
-                description: `There was an error processing your payment: ${error.message}. Please try again.`,
+                description: `There was an error processing your payment: ${(error as Error).message}. Please try again.`,
                 variant: "destructive",
             });
         }
@@ -206,9 +230,9 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
                     <h2 className="text-2xl font-bold mb-2">Payment Complete!</h2>
                     <p className="text-muted-foreground mb-6">Your transaction has been processed successfully.</p>
                     <p className="text-sm text-muted-foreground mb-8">
-                        {receiptOptions.email && "A receipt has been sent to your email. "}
-                        {receiptOptions.print && "Your receipt is being printed. "}
-                        {receiptOptions.sms && "A receipt has been sent to your phone. "}
+                        {receiptOptions.email && customerInfo.email && "A receipt has been sent to your email. "}
+                        {receiptOptions.print && "Your receipt has been printed. "}
+                        {receiptOptions.sms && customerInfo.phone && "A receipt has been sent to your phone. "}
                     </p>
                     <Button asChild>
                         <Link href="/pos">Return to Point of Sale</Link>
@@ -486,7 +510,7 @@ export default function CheckoutPage() {
 
     console.log("Rendering with clientSecret:", clientSecret);
     if (loading || (cart.items.length > 0 && !clientSecret)) {
-        return <div>Loading...</div>;
+        return <div className="justify-center">Loading...</div>;
     }
 
     if (!clientSecret) {

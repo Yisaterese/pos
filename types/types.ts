@@ -21,3 +21,24 @@ export interface Product {
     height: number; // Add from formData
     notes: string; // Add from formData
 }
+
+export interface CartItem {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+}
+
+export interface Cart {
+    items: CartItem[];
+    total: number;
+    tax: number;
+    taxRate: number;
+    discount: number;
+}
+
+export interface CustomerInfo {
+    email:string;
+    firstName: string;
+    lastName: string;
+}
